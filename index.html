@@ -131,7 +131,7 @@ details.pj:last-of-type{border-bottom:1px solid var(--line)}
 </head>
 <body>
 <header class="bar"><div><b>Bhrugu Giri</b>
-<nav aria-label="Sections"><a href="#about">About</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#credentials">Credentials</a><a href="#contact">Contact</a></nav></div></header>
+<nav aria-label="Sections"><a href="#about">About</a><a href="#projects">Projects</a><a href="#writing">Writing</a><a href="#experience">Experience</a><a href="#credentials">Credentials</a><a href="#contact">Contact</a></nav></div></header>
 
 <div class="hero">
   <canvas id="net" aria-hidden="true"></canvas>
@@ -263,6 +263,13 @@ details.pj:last-of-type{border-bottom:1px solid var(--line)}
     </details>
   </section>
 
+  <section id="writing">
+    <h2>Writing</h2>
+    <p class="sub">Notes on AI, engineering culture and everything else, published on Medium.</p>
+    <dl class="tl" id="posts" hidden></dl>
+    <p style="margin-top:24px"><a href="https://medium.com/@bhrugu.giri">Read everything on Medium</a></p>
+  </section>
+
   <section id="experience">
     <h2>Experience</h2>
     <dl class="tl">
@@ -313,6 +320,25 @@ details.pj:last-of-type{border-bottom:1px solid var(--line)}
     if(!still)requestAnimationFrame(draw)}
   size();draw();
   addEventListener('resize',function(){size();if(still)draw()});
+})();
+</script>
+<script>
+(function(){
+  var box=document.getElementById('posts');
+  fetch('posts.json').then(function(r){return r.json()}).then(function(list){
+    if(!Array.isArray(list)||!list.length)return;
+    list.slice(0,8).forEach(function(p){
+      if(!p.url||p.url.indexOf('https://')!==0)return;
+      var dt=document.createElement('dt'),dd=document.createElement('dd'),h=document.createElement('h3'),a=document.createElement('a'),t=document.createElement('p');
+      var d=new Date(p.date+'T00:00:00');
+      dt.textContent=isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+      a.href=p.url;a.textContent=p.title;a.rel='noopener';h.appendChild(a);
+      t.textContent=p.summary||'';
+      dd.appendChild(h);if(p.summary)dd.appendChild(t);
+      box.appendChild(dt);box.appendChild(dd);
+    });
+    if(box.children.length)box.hidden=false;
+  }).catch(function(){});
 })();
 </script>
 </body>
